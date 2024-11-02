@@ -28,6 +28,7 @@
     "@fontsource/roboto": "^5.1.0",
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.1.6",
+    "@xyflow/react": "^12.3.4",
     "electron-updater": "^6.1.7"
   },
   "devDependencies": {

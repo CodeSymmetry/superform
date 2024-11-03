@@ -29,7 +29,8 @@
     "@mui/icons-material": "^6.1.6",
     "@mui/material": "^6.1.6",
     "@xyflow/react": "^12.3.4",
-    "electron-updater": "^6.1.7"
+    "electron-updater": "^6.1.7",
+    "react-router-dom": "^6.27.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

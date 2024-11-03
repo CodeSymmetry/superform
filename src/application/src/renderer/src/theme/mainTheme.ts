@@ -9,6 +9,14 @@ const mainTheme = createTheme({
         }
       `
     }
+  },
+  palette: {
+    primary: {
+      main: '#ff007f'
+    },
+    text: {
+      primary: '#d6ced2'
+    }
   }
 })
 

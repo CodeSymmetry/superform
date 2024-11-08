@@ -1,7 +1,9 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
-import { join } from 'path'
+import * as path from 'path'
+import * as fs from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { Domain } from '../model/domains/domain'
 
 function createWindow(): void {
   // Create the browser window.
@@ -12,7 +14,7 @@ function createWindow(): void {
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: path.join(__dirname, '../preload/index.js'),
       sandbox: false
     }
   })
@@ -31,7 +33,7 @@ function createWindow(): void {
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL'])
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
+    mainWindow.loadFile(path.join(__dirname, '../renderer/index.html'))
   }
 }
 
@@ -49,9 +51,23 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window)
   })
 
-  // IPC test
-  ipcMain.on('ping', () => {
-    console.log('pong')
+  ipcMain.handle('create-domain', async (_, data: Domain) => {
+    // Get the default user directory (Documents)
+    const userDir = app.getPath('documents')
+    const appDir = path.join(userDir, 'MyAppData') // Customize the folder name
+
+    // Ensure the directory exists
+    if (!fs.existsSync(appDir)) {
+      fs.mkdirSync(appDir, { recursive: true })
+    }
+
+    // Define the path for the JSON file
+    const filePath = path.join(appDir, 'domain.json')
+
+    // Write JSON data to file
+    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
+
+    return filePath // Optionally return the file path
   })
 
   createWindow()

@@ -10,7 +10,7 @@ const baseTheme = createTheme({
 const theme = createTheme({
   ...baseTheme,
   components: {
-    ...textFieldOverrides,
+    ...textFieldOverrides(),
     ...inputOverrides(baseTheme)
   }
 })

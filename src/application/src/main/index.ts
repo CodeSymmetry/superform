@@ -1,9 +1,11 @@
 import { app, shell, BrowserWindow, ipcMain } from 'electron'
 import * as path from 'path'
-import * as fs from 'fs'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png?asset'
+import { createDomain } from './domains/createDomain'
 import { Domain } from '../model/domains/domain'
+import { getRecentDomains } from './domains/recent/getRecentDomains'
+import { addRecentDomain, AddRecentDomainProps } from './domains/recent/addRecentDomain'
 
 function createWindow(): void {
   // Create the browser window.
@@ -52,22 +54,13 @@ app.whenReady().then(() => {
   })
 
   ipcMain.handle('create-domain', async (_, data: Domain) => {
-    // Get the default user directory (Documents)
-    const userDir = app.getPath('documents')
-    const appDir = path.join(userDir, 'MyAppData') // Customize the folder name
-
-    // Ensure the directory exists
-    if (!fs.existsSync(appDir)) {
-      fs.mkdirSync(appDir, { recursive: true })
-    }
-
-    // Define the path for the JSON file
-    const filePath = path.join(appDir, 'domain.json')
-
-    // Write JSON data to file
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2), 'utf-8')
-
-    return filePath // Optionally return the file path
+    return await createDomain(data)
+  })
+  ipcMain.handle('get-recent-domains', async () => {
+    return await getRecentDomains()
+  })
+  ipcMain.handle('add-recent-domain', async (_, data: AddRecentDomainProps) => {
+    return await addRecentDomain(data)
   })
 
   createWindow()

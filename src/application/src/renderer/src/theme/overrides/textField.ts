@@ -1,14 +1,13 @@
 import { Components } from '@mui/material/styles/components'
 
-const textFieldOverrides: Components = {
+const textFieldOverrides = (): Components => ({
   MuiTextField: {
     defaultProps: {
-      variant: 'standard'
+      variant: 'outlined',
+      size: 'small'
     },
-    styleOverrides: {
-      root: {}
-    }
+    styleOverrides: {}
   }
-}
+})
 
 export default textFieldOverrides

@@ -13,8 +13,8 @@ import { toggleAction } from '@renderer/actions/slice'
 import { useAppDispatch } from '@renderer/redux/hooks'
 import { useFormik } from 'formik'
 import validationSchema from './validationSchema'
-import { Domain } from 'src/model/domains/domain'
 import { useNavigate } from 'react-router-dom'
+import { Domain } from 'src/model/domains/domain'
 
 const CreateDomainDialog = (): JSX.Element => {
   const dispatch = useAppDispatch()
@@ -44,7 +44,7 @@ const CreateDomainDialog = (): JSX.Element => {
 
   return (
     <Dialog
-      open={isCreateDomainActive || false}
+      open={!!isCreateDomainActive}
       onClose={handleCancel}
       PaperProps={{
         component: 'form',
@@ -53,35 +53,37 @@ const CreateDomainDialog = (): JSX.Element => {
     >
       <DialogTitle>Create Domain {formik.values.name}</DialogTitle>
       <DialogContent>
-        <Stack spacing={2} mt={1}>
+        <Stack spacing={4} mt={1}>
           <DialogContentText>
             Please provide Name and Description for your new Domain. Please read more about Domains
             in our docs under section Domains.
           </DialogContentText>
-          <TextField
-            fullWidth
-            id="name"
-            name="name"
-            label="Name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
-          />
-          <TextField
-            multiline
-            fullWidth
-            id="description"
-            name="description"
-            label="Description"
-            type="description"
-            value={formik.values.description}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={formik.touched.description && Boolean(formik.errors.description)}
-            helperText={formik.touched.description && formik.errors.description}
-          />
+          <Stack spacing={3}>
+            <TextField
+              fullWidth
+              id="name"
+              name="name"
+              label="Name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
+            />
+            <TextField
+              multiline
+              fullWidth
+              id="description"
+              name="description"
+              label="Description"
+              type="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={formik.touched.description && Boolean(formik.errors.description)}
+              helperText={formik.touched.description && formik.errors.description}
+            />
+          </Stack>
         </Stack>
       </DialogContent>
       <DialogActions>

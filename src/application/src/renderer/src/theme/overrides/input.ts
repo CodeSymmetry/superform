@@ -3,7 +3,9 @@ import { Components } from '@mui/material/styles/components'
 
 const inputOverrides = (theme: Theme): Components => ({
   MuiInput: {
-    defaultProps: {},
+    defaultProps: {
+      size: 'small'
+    },
     styleOverrides: {
       underline: {
         '&:before': {
@@ -14,6 +16,22 @@ const inputOverrides = (theme: Theme): Components => ({
         },
         '&:after': {
           borderBottomColor: theme.palette.primary.dark // Focused state bottom border color
+        }
+      }
+    }
+  },
+  MuiOutlinedInput: {
+    defaultProps: {
+      size: 'small'
+    },
+    styleOverrides: {
+      notchedOutline: {
+        borderColor: theme.palette.grey[800],
+        '&:hover': {
+          borderColor: theme.palette.primary.dark
+        },
+        '&$focused': {
+          borderColor: theme.palette.primary.dark
         }
       }
     }

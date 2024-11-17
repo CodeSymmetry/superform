@@ -1,5 +1,9 @@
+import { useParams } from 'react-router-dom'
+
 const Domain = (): JSX.Element => {
-  return <>Hello from Domain</>
+  const { domainName } = useParams<{ domainName: string }>()
+
+  return <>Hello from Domain {domainName}</>
 }
 
 export default Domain

@@ -20,6 +20,12 @@ const palette: PaletteOptions = {
   background: {
     default: '#121220',
     paper: '#121220'
+  },
+  grey: {
+    900: '#242e39',
+    800: '#364350',
+    700: '#455566',
+    600: '#54697d'
   }
 }
 

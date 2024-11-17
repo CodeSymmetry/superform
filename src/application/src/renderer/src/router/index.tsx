@@ -1,9 +1,9 @@
+import DomainLayout from '@renderer/features/domain/DomainLayout'
+import WelcomeLayout from '@renderer/features/welcome/WelcomeLayout'
 import { lazy, Suspense } from 'react'
 import { createHashRouter, Outlet } from 'react-router-dom'
 
-const WelcomeLayout = lazy(() => import('../features/welcome/WelcomeLayout'))
 const WelcomePage = lazy(() => import('../features/welcome'))
-const DomainLayout = lazy(() => import('../features/domain/DomainLayout'))
 const DomainPage = lazy(() => import('../features/domain'))
 const SandboxPage = lazy(() => import('../features/sandbox'))
 const Actions = lazy(() => import('../actions'))
@@ -41,7 +41,7 @@ const router = createHashRouter([
         ]
       },
       {
-        path: '/domain',
+        path: '/domain/:domainName',
         element: <DomainLayout />,
         children: [
           {

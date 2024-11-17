@@ -1,5 +1,5 @@
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
-import WelcomMenuItem from './WelcomeMenuButton'
+import WelcomMenuButton from './WelcomeMenuButton'
 
 const OpenDomainWelcomeMenuItem = (): JSX.Element => {
   const handleClick = (): void => {
@@ -7,7 +7,7 @@ const OpenDomainWelcomeMenuItem = (): JSX.Element => {
   }
 
   return (
-    <WelcomMenuItem
+    <WelcomMenuButton
       title="Open"
       description="Open existing domain from the file system"
       onClick={handleClick}

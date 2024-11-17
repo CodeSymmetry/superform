@@ -2,7 +2,9 @@
 const electron = require("electron");
 const preload = require("@electron-toolkit/preload");
 const api = {
-  createDomain: (domain) => electron.ipcRenderer.invoke("create-domain", domain)
+  createDomain: (domain) => electron.ipcRenderer.invoke("create-domain", domain),
+  addRecentDomain: (props) => electron.ipcRenderer.invoke("add-recent-domain", props),
+  getRecentDomains: () => electron.ipcRenderer.invoke("get-recent-domains")
 };
 if (process.contextIsolated) {
   try {

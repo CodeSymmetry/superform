@@ -1,8 +1,8 @@
 "use strict";
 const electron = require("electron");
 const path = require("path");
-const fs = require("fs");
 const utils = require("@electron-toolkit/utils");
+const fs = require("fs");
 function _interopNamespaceDefault(e) {
   const n = Object.create(null, { [Symbol.toStringTag]: { value: "Module" } });
   if (e) {
@@ -22,6 +22,61 @@ function _interopNamespaceDefault(e) {
 const path__namespace = /* @__PURE__ */ _interopNamespaceDefault(path);
 const fs__namespace = /* @__PURE__ */ _interopNamespaceDefault(fs);
 const icon = path.join(__dirname, "../../resources/icon.png");
+const getRecentDomainsFilePath = () => {
+  const userDataDir = electron.app.getPath("userData");
+  return path__namespace.join(userDataDir, "recentDomains.json");
+};
+const isErrnoException = (error) => {
+  return error instanceof Error && "code" in error;
+};
+const getRecentDomains = async () => {
+  const filePath = getRecentDomainsFilePath();
+  try {
+    const fileContent = fs__namespace.readFileSync(filePath, "utf-8");
+    return JSON.parse(fileContent);
+  } catch (error) {
+    if (isErrnoException(error) && error.code == "ENOENT") {
+      fs__namespace.writeFileSync(filePath, JSON.stringify([]), "utf-8");
+      return [];
+    } else {
+      throw error;
+    }
+  }
+};
+const saveRecentDomains = async (recentDomains) => {
+  const filePath = getRecentDomainsFilePath();
+  fs__namespace.writeFileSync(filePath, JSON.stringify(recentDomains, null, 2), "utf-8");
+};
+const addRecentDomain = async (props) => {
+  const { path: path2, domain } = props;
+  const recentDomains = await getRecentDomains();
+  const existingIndex = recentDomains.findIndex((recentDomain2) => recentDomain2.path === path2);
+  if (existingIndex !== -1) {
+    recentDomains.splice(existingIndex, 1);
+  }
+  const recentDomain = {
+    name: domain.name,
+    description: domain.description,
+    path: path2
+  };
+  recentDomains.unshift(recentDomain);
+  if (recentDomains.length > 5) {
+    recentDomains.pop();
+  }
+  await saveRecentDomains(recentDomains);
+  return recentDomain;
+};
+const createDomain = async (domain) => {
+  const documentsDir = electron.app.getPath("documents");
+  const domainDir = path__namespace.join(documentsDir, "superform", domain.name);
+  if (!fs__namespace.existsSync(domainDir)) {
+    fs__namespace.mkdirSync(domainDir, { recursive: true });
+  }
+  const filePath = path__namespace.join(domainDir, "domain.json");
+  fs__namespace.writeFileSync(filePath, JSON.stringify(domain, null, 2), "utf-8");
+  addRecentDomain({ path: filePath, domain });
+  return filePath;
+};
 function createWindow() {
   const mainWindow = new electron.BrowserWindow({
     width: 900,
@@ -53,14 +108,13 @@ electron.app.whenReady().then(() => {
     utils.optimizer.watchWindowShortcuts(window);
   });
   electron.ipcMain.handle("create-domain", async (_, data) => {
-    const userDir = electron.app.getPath("documents");
-    const appDir = path__namespace.join(userDir, "MyAppData");
-    if (!fs__namespace.existsSync(appDir)) {
-      fs__namespace.mkdirSync(appDir, { recursive: true });
-    }
-    const filePath = path__namespace.join(appDir, "domain.json");
-    fs__namespace.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-    return filePath;
+    return await createDomain(data);
+  });
+  electron.ipcMain.handle("get-recent-domains", async () => {
+    return await getRecentDomains();
+  });
+  electron.ipcMain.handle("add-recent-domain", async (_, data) => {
+    return await addRecentDomain(data);
   });
   createWindow();
   electron.app.on("activate", function() {

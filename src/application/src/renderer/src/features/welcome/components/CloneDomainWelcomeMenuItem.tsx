@@ -1,5 +1,5 @@
 import CloudDownloadOutlinedIcon from '@mui/icons-material/CloudDownloadOutlined'
-import WelcomMenuItem from './WelcomeMenuButton'
+import WelcomMenuButton from './WelcomeMenuButton'
 
 const CloneDomainWelcomeMenuItem = (): JSX.Element => {
   const handleClick = (): void => {
@@ -7,7 +7,7 @@ const CloneDomainWelcomeMenuItem = (): JSX.Element => {
   }
 
   return (
-    <WelcomMenuItem
+    <WelcomMenuButton
       title="Clone"
       description="Clone existing domain from Git repository"
       onClick={handleClick}
